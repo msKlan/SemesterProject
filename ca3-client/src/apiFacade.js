@@ -11,6 +11,7 @@ function apiFacade() {
       method: method,
       headers: {
         "Content-type": "application/json",
+        // "Origin": "http://localhost:3000",
         Accept: "application/json"
       }
     };
@@ -35,7 +36,7 @@ function apiFacade() {
 
   // Store JWT in localStorage
   const setToken = token => {
-    // console.log("setToken: ", token);
+    console.log("setToken: ", token);
     localStorage.setItem("jwtToken", token);
   };
 
@@ -77,6 +78,13 @@ function apiFacade() {
     removeToken();
   };
 
+  const getCity = (city) => {
+    console.log("getCity: ", ">"+URL + "/api/info/place/" + city+"<");
+    return fetch(URL).then(handleHttpErrors);
+    const options = makeOptions("GET", true);
+    return fetch(URL + "/api/info/place/" + city.toString(), options).then(handleHttpErrors);
+  };
+
   const getItems = () => {
     console.log("getItems: ", URL);
     // return fetch(URL).then(handleHttpErrors);
@@ -100,7 +108,8 @@ function apiFacade() {
     login,
     logout,
     loggedIn,
-    getItems
+    getItems,
+    getCity
   };
 }
 

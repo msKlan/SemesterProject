@@ -13,6 +13,10 @@ import Home from "./Home";
 import Product from "./Product";
 // import AddEditItem from "./AddEditItem";
 import Login from "./Login";
+import DatePicker from "react-datepicker";
+import Dropdown from "react-dropdown"
+import "react-dropdown/style.css"
+import "react-datepicker/dist/react-datepicker.css";
 
 import "./App.css";
 
@@ -30,6 +34,7 @@ function App({ apiFacade, match }) {
   const emptyItem = { id: "", title: "No data", info: "" };
   // const [itemToAddEdit, setItemToAddEdit] = useState(emptyItem);
   const [items, setItems] = useState([emptyItem]);
+  const [date, setDate] = useState(new Date());
 
   let history = useHistory();
 
@@ -56,6 +61,9 @@ function App({ apiFacade, match }) {
     setUsername("");
     history.push("/");
   };
+  const dd_options = ["one","two","three"]
+  const dd_defaultOption = "one";
+  const onSelect = sel => {console.log(sel);}
 
   // Get all items from back-end when rendering
   useEffect(() => {
@@ -73,6 +81,19 @@ function App({ apiFacade, match }) {
       .catch(err => console.log("Ups refreshitems:" + err));
   };
 
+  const handleChange = date => {
+    setDate( date );
+  };
+
+  const enterCity  = (city) => {
+      console.log(city);
+      apiFacade.getCity(city)
+      // apiFacade.getItems()
+      .then(data => {
+        console.log(data);
+      })
+      .catch(err => console.log("Ups enterCity:" + err));
+  }
   return (
     <div>
       <Nav
@@ -85,6 +106,23 @@ function App({ apiFacade, match }) {
           <Home />
         </Route>
         <Route path="/products" exact>
+        <input
+          type="text"
+          placeholder="Type departure city"
+          id="departureCity"
+          onKeyDown={e=> {if(e.key==="Enter"){enterCity(e.target.value)}}}
+        />
+        <Dropdown
+          options={dd_options}
+          onChange={onSelect}
+          //value={dd_defaultOption}
+          placeholder="select a departure airport"
+        />
+        <DatePicker
+        selected={date}
+        onChange={handleChange}
+        dateFormat="dd-MMM-yyyy"
+      />
           <Product
             items={items}
             // editItem={editItem}
