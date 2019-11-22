@@ -86,9 +86,16 @@ public class DemoResource {
     }
     
     @GET
-    @Path("{origin}/{destination}/{date}")
+    @Path("flights/{origin}/{destination}/{date}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getJsonFlight(@PathParam("origin") String origin, @PathParam("destination") String destination, @PathParam("date") Date date) throws ProtocolException, IOException{
+    public String getJsonFlight(@PathParam("origin") String origin, @PathParam("destination") String destination, @PathParam("date") String date) throws ProtocolException, IOException{
         return api.getFlightData(origin, destination, date);
+    }
+    
+    @GET 
+    @Path("session")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getSessionID() throws ProtocolException, IOException{
+        return api.getCustomerSessionID();
     }
 }
