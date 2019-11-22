@@ -12,15 +12,24 @@ import javax.ws.rs.ext.Provider;
 @Provider  //This will ensure that the filter is used "automatically"
 @PreMatching
 public class CorsRequestFilter implements ContainerRequestFilter {
-  private final static Logger log = Logger.getLogger(CorsRequestFilter.class.getName());
-  @Override
-  public void filter(ContainerRequestContext requestCtx) throws IOException {
-    // When HttpMethod comes as OPTIONS, just acknowledge that it accepts...
-    if (requestCtx.getRequest().getMethod().equals("OPTIONS")) {
-      // log.info("HTTP Method (OPTIONS) - Detected!");
-      // Just send a OK response back to the browser.
-      // The response goes through the chain of applicable response filters.
-      requestCtx.abortWith(Response.status(Response.Status.OK).build());
+
+    private final static Logger log = Logger.getLogger(CorsRequestFilter.class.getName());
+
+    @Override
+    public void filter(ContainerRequestContext requestCtx) throws IOException {
+        // When HttpMethod comes as OPTIONS, just acknowledge that it accepts...
+
+        if (requestCtx.getRequest().getMethod().equals("OPTIONS")) {
+            // log.info("HTTP Method (OPTIONS) - Detected!");
+            // Just send a OK response back to the browser.
+            // The response goes through the chain of applicable response filters.
+            requestCtx.abortWith(Response.status(Response.Status.OK).build());
+
+        }
+//        requestCtx.getHeaders().add("Access-Control-Allow-Origin", "*");
+//        requestCtx.getHeaders().add("Access-Control-Allow-Credentials", "true");
+//        requestCtx.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+//        requestCtx.getHeaders().add("Access-Control-Allow-Headers", "Origin, Accept, Content-Type, Authorization,x-access-token");
+
     }
-  }
-} 
+}

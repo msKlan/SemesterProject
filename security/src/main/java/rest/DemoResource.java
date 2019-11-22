@@ -1,8 +1,12 @@
 package rest;
 
-import com.google.gson.Gson;
 import entities.User;
+import facades.apiFacade;
+import java.io.IOException;
+import java.net.ProtocolException;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -11,6 +15,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import utils.EMF_Creator;
@@ -22,7 +27,7 @@ import utils.EMF_Creator;
 public class DemoResource {
 
     private static EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
-
+    private apiFacade api = new apiFacade();
     @Context
     private UriInfo context;
 
@@ -59,14 +64,14 @@ public class DemoResource {
         return "{\"msg\": \"Hello to User: " + thisuser + "\"}";
     }
 
-    @GET
+      @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("userdata")
     @RolesAllowed("user")
     public String getUserData() {
         return "[{\"id\": 100, \"title\": \"How to Learn JavaScript - Vol 1\", \"info\": \"Study hard\" }, {\"id\": 101, \"title\": \"How to Learn ES6\", \"info\": \"Complete all exercises :-)\" }, {\"id\": 102, \"title\": \"How to Learn React\", \"info\": \"Complete all your CA's\" }, {\"id\": 103, \"title\": \"Learn React\", \"info\": \"Don't drink beer(s), until Friday (after four)\" }]";
     }
-
+    
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("admin")
@@ -74,5 +79,24 @@ public class DemoResource {
     public String getFromAdmin() {
         String thisuser = securityContext.getUserPrincipal().getName();
         return "{\"msg\": \"Hello to (admin) User: " + thisuser + "\"}";
+    }
+//    @GET
+//    @Path("allflights")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public String getJsonPeopleList() throws InterruptedException, ExecutionException, ProtocolException, IOException {
+//        return api.getFlightData();
+//    }
+    @GET
+    @Path("place/{place}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getJsonPlaces(@PathParam("place") String place) throws ProtocolException, IOException{
+        return api.getFlightPlaces(place);
+    }
+    
+    @GET
+    @Path("{origin}/{destination}/{date}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getJsonFlight(@PathParam("origin") String origin, @PathParam("destination") String destination, @PathParam("date") Date date) throws ProtocolException, IOException{
+        return api.getFlightData(origin, destination, date);
     }
 }
