@@ -79,7 +79,7 @@ function apiFacade() {
   };
 
   const getCity = (city) => {
-    console.log("getCity: ", ">"+URL + "/api/info/place/" + city+"<");
+    console.log("getCity: ", ">"+URL + "/api/info/place/" + city);
     return fetch(URL).then(handleHttpErrors);
     const options = makeOptions("GET", true);
     return fetch(URL + "/api/info/place/" + city.toString(), options).then(handleHttpErrors);
