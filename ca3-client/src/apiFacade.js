@@ -27,6 +27,10 @@ function apiFacade() {
   // Generic errorhandler for fetch-metod
   function handleHttpErrors(res) {
     console.log(res);
+    // res.json().then(data => {
+    //   console.log("handleHttpErrors: ", data);
+    // });
+
     if (!res.ok) {
       removeToken(); // Remove JWT if an error occurred
       return Promise.reject({ status: res.status, fullError: res.json() });
@@ -58,18 +62,23 @@ function apiFacade() {
 
   // Login and store JWT ig successful
   const login = (username, password) => {
-    // console.log("apiFacade-login: ", username, password);
+    console.log("apiFacade-login: ", username, password);
     const options = makeOptions("POST", true, {
       username: username,
       password: password
     });
     // console.log("login:", options);
+    console.log(URL + "/api/login");
     return fetch(URL + "/api/login", options)
       .then(handleHttpErrors)
       .then(res => {
         setToken(res.token);
         console.log("apiFacade-login: ", res.token);
         // TBD - Store other data from login if any - roles?
+      })
+      .catch(err => {
+        console.log("Ups apiFacade-login:" + err);
+        // history.push("/");
       });
   };
 
@@ -78,10 +87,38 @@ function apiFacade() {
     removeToken();
   };
 
-  const getCity = (city) => {
-    const getCityUrl= URL + "/api/info/place/" + city
+  const getCity = city => {
+    console.log("getCity: ", ">" + URL + "/api/info/place/" + city + "<");
     const options = makeOptions("GET", true);
-    return fetch(URL + "/api/info/place/" + city.toString(), options).then(handleHttpErrors);
+    return fetch(URL + "/api/info/place/" + city.toString(), options).then(
+      handleHttpErrors
+    );
+  };
+
+  const getDepAirports = depFilterCity => {
+    console.log("apiFacade-getDepAirports: ", depFilterCity);
+    const options = makeOptions("GET", true);
+
+    return fetch(URL + "/api/info/place/" + depFilterCity, options).then(
+      handleHttpErrors
+    );
+    // .then(data => {
+    //   console.log(data.Places);
+    //   return data.Places;
+    // });
+  };
+
+  const getArrAirports = arrFilterCity => {
+    console.log("apiFacade-getArrAirports: ", arrFilterCity);
+    const options = makeOptions("GET", true);
+
+    return fetch(URL + "/api/info/place/" + arrFilterCity, options).then(
+      handleHttpErrors
+    );
+    // .then(data => {
+    //   console.log(data.Places);
+    //   return data.Places;
+    // });
   };
 
   const getItems = () => {
@@ -108,7 +145,9 @@ function apiFacade() {
     logout,
     loggedIn,
     getItems,
-    getCity
+    getCity,
+    getDepAirports,
+    getArrAirports
   };
 }
 

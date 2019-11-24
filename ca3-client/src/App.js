@@ -1,40 +1,14 @@
 import React, { useState, useEffect } from "react";
-import {
-  Route,
-  Switch,
-  // Prompt,
-  useHistory
-  // useParams,
-  // Redirect
-} from "react-router-dom";
-
-import Nav from "./Nav";
+import { Route, Switch, useHistory } from "react-router-dom";
+import Nav from "./Components/Nav";
+import Login from "./Components/Login";
 import Home from "./Home";
-import Product from "./Product";
-// import AddEditItem from "./AddEditItem";
-import Login from "./Login";
-import DatePicker from "react-datepicker";
-import Dropdown from "react-dropdown"
-import "react-dropdown/style.css"
-import "react-datepicker/dist/react-datepicker.css";
-
-import "./App.css";
-
-function NoMatch() {
-  return (
-    <div>
-      <h2>This URL does not exist!</h2>
-    </div>
-  );
-}
+import List from "./Containers/List";
+import "./styles.css";
 
 function App({ apiFacade, match }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
-  const emptyItem = { id: "", title: "No data", info: "" };
-  // const [itemToAddEdit, setItemToAddEdit] = useState(emptyItem);
-  const [items, setItems] = useState([emptyItem]);
-  const [date, setDate] = useState(new Date());
 
   let history = useHistory();
 
@@ -43,16 +17,20 @@ function App({ apiFacade, match }) {
     apiFacade
       .login(username, password)
       .then(data => {
-        setIsLoggedIn(apiFacade.loggedIn);
+        setIsLoggedIn(apiFacade.loggedIn());
+        // console.log("Am I logged in? ", isLoggedIn);
         setUsername(username);
-        getItems();
-        // history.push("/products");
+        // getItems();
+        // console.log("Kommer jeg her1?", isLoggedIn, history.location);
+        history.push("/flights");
+        // console.log("Kommer jeg her2?", history.location);
       })
       .catch(err => {
         console.log("Ups login:" + err);
         // history.push("/");
       });
-    history.push("/products");
+    // console.log("Kommer jeg også her?");
+    history.push("/flights");
   };
 
   const logout = () => {
@@ -61,39 +39,15 @@ function App({ apiFacade, match }) {
     setUsername("");
     history.push("/");
   };
-  const dd_options = ["one","two","three"]
-  const dd_defaultOption = "one";
-  const onSelect = sel => {console.log(sel);}
 
-  // Get all items from back-end when rendering
-  useEffect(() => {
-    getItems();
-  }, [apiFacade]);
-
-  // Get all items from back-end
-  const getItems = () => {
-    console.log("getItems:", apiFacade);
-    apiFacade
-      .getItems()
-      .then(data => {
-        setItems(data);
-      })
-      .catch(err => console.log("Ups refreshitems:" + err));
-  };
-
-  const handleChange = date => {
-    setDate( date );
-  };
-
-  const enterCity  = (city) => {
-      console.log(city);
-      apiFacade.getCity(city)
-      // apiFacade.getItems()
-      .then(data => {
-        console.log(data);
-      })
-      .catch(err => console.log("Ups enterCity:" + err));
+  function NoMatch() {
+    return (
+      <div>
+        <h4>This URL does not exist or you are not logged in!</h4>
+      </div>
+    );
   }
+
   return (
     <div>
       <Nav
@@ -105,42 +59,13 @@ function App({ apiFacade, match }) {
         <Route exact path="/">
           <Home />
         </Route>
-        <Route path="/products" exact>
-        <input
-          type="text"
-          placeholder="Type departure city"
-          id="departureCity"
-          onKeyDown={e=> {if(e.key==="Enter"){enterCity(e.target.value)}}}
-        />
-        <Dropdown
-          options={dd_options}
-          onChange={onSelect}
-          //value={dd_defaultOption}
-          placeholder="select a departure airport"
-        />
-        <DatePicker
-        selected={date}
-        onChange={handleChange}
-        dateFormat="dd-MMM-yyyy"
-      />
-          <Product
-            items={items}
-            // editItem={editItem}
-            // deleteItem={deleteItem}
-            // findItem={findItem}
-            // storeAddEditItem={storeAddEditItem}
-          />
-        </Route>
-        {/* <Route path="/add-item">
-          <Additem apiFacede={apiFacade} />
-        </Route> */}
-        {/* <Route path="/products/:id">
-          <AddEditItem
-            items={items}
-            findItem={findItem}
-            addEditItem={storeAddEditItem}
-          />
-        </Route> */}
+        {isLoggedIn ? (
+          <Route path="/flights" exact>
+            <List apiFacade={apiFacade} />
+          </Route>
+        ) : (
+          ""
+        )}
         <Route path="/login-out">
           <Login isLoggedIn={isLoggedIn} login={login} logout={logout} />
         </Route>
