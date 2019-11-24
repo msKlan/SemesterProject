@@ -24,16 +24,33 @@ const List = props => {
   const [arrAirports, setArrAirports] = useState([]);
   const [arrAirport, setArrAirport] = useState("");
 
+  const [flights, setFlights] = useState([]);
+
   const [date, setDate] = useState(new Date());
 
   const [loading, setLoading] = useState(false);
 
   React.useEffect(() => {
     setLoading(true);
-    fetch("https://5cfabdcbf26e8c00146d0b0e.mockapi.io/tasks")
-      .then(resp => resp.json())
-      .then(data => data.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)))
-      .then(data => setList(data));
+
+    fetch(
+      "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/SFO-sky/JFK-sky/2019-09-01?inboundpartialdate=2019-12-01",
+      {
+        method: "GET",
+        headers: {
+          "x-rapidapi-host":
+            "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
+          "x-rapidapi-key": "fc57adf466mshe3a11f65601f877p1981cajsn0d68dc42ed6c"
+        }
+      }
+    )
+      .then(response => {
+        console.log(response);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
     setLoading(false);
   }, []);
 
@@ -60,6 +77,8 @@ const List = props => {
 
     setLoading(false);
   };
+
+  const getFlights = () => {};
 
   const addTask = () => {
     if (!newTask) return;
@@ -185,13 +204,13 @@ const List = props => {
       <div className="col-12">
         <ul className="list-group">
           <ListHeaders />
-          {/* {filteredList.map(task => (
-            <Task
-              key={task.id}
-              task={task}
-              toogleTask={toogleTask}
-              deleteTask={deleteTask}
-              id={task.id}
+          {/* {filteredList.map(flight => (
+            <Flight
+              key={flight.id}
+              flight={flight}
+              toogleFlight={toogleFlight}
+              deleteFlight={deleteFlight}
+              id={flight.id}
             />
           ))} */}
         </ul>
