@@ -64,6 +64,7 @@ public class apiFacade {
             return jsonStr;
         }
     }
+<<<<<<< HEAD
     public String getFlightData(String origin, String destination, String date) throws MalformedURLException, ProtocolException, IOException
     {
         String fullUrl = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/";
@@ -94,6 +95,18 @@ public class apiFacade {
         con.setRequestProperty("x-rapidapi-host", "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com");
         con.setRequestProperty("x-rapidapi-key", "812371d51bmsh7b3a3c223132889p1b2420jsn9fa956b1a648");
         con.setRequestProperty("Accept", "application/json;charset=UTF-8");
+=======
+    public String getFlightData(String origin, String destination, Date date) throws MalformedURLException, ProtocolException, IOException
+    {
+        String fullUrl = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/";
+        String fullyBuild = fullUrl + "/" + origin + "/" + destination + "/" + date.toString();
+        URL url = new URL(fullyBuild);
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Accept", "application/json;charset=UTF-8");
+        con.setRequestProperty("x-rapidapi-host", "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com");
+        con.setRequestProperty("x-rapidapi-key", "812371d51bmsh7b3a3c223132889p1b2420jsn9fa956b1a648");
+>>>>>>> 916f62955bc3c1b07643001a35a18a13f5ed8de8
         try (Scanner scan = new Scanner(con.getInputStream()))
         {
             String jsonStr = "";
