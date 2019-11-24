@@ -80,7 +80,6 @@ function apiFacade() {
 
   const getCity = (city) => {
     const getCityUrl= URL + "/api/info/place/" + city
-    return fetch(getCityUrl).then(handleHttpErrors);
     const options = makeOptions("GET", true);
     return fetch(URL + "/api/info/place/" + city.toString(), options).then(handleHttpErrors);
   };

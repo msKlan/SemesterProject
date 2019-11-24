@@ -64,14 +64,6 @@ public class DemoResource {
         return "{\"msg\": \"Hello to User: " + thisuser + "\"}";
     }
 
-      @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("userdata")
-    @RolesAllowed("user")
-    public String getUserData() {
-        return "[{\"id\": 100, \"title\": \"How to Learn JavaScript - Vol 1\", \"info\": \"Study hard\" }, {\"id\": 101, \"title\": \"How to Learn ES6\", \"info\": \"Complete all exercises :-)\" }, {\"id\": 102, \"title\": \"How to Learn React\", \"info\": \"Complete all your CA's\" }, {\"id\": 103, \"title\": \"Learn React\", \"info\": \"Don't drink beer(s), until Friday (after four)\" }]";
-    }
-    
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("admin")
@@ -94,9 +86,16 @@ public class DemoResource {
     }
     
     @GET
-    @Path("{origin}/{destination}/{date}")
+    @Path("flights/{origin}/{destination}/{date}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getJsonFlight(@PathParam("origin") String origin, @PathParam("destination") String destination, @PathParam("date") Date date) throws ProtocolException, IOException{
+    public String getJsonFlight(@PathParam("origin") String origin, @PathParam("destination") String destination, @PathParam("date") String date) throws ProtocolException, IOException{
         return api.getFlightData(origin, destination, date);
+    }
+    
+    @GET 
+    @Path("session")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getSessionID() throws ProtocolException, IOException{
+        return api.getCustomerSessionID();
     }
 }
